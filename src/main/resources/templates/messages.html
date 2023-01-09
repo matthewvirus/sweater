@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org">
+<head th:include="/fragments/head.html :: head-fragment">
+    <title id="page-title">Messages</title>
+</head>
+<body>
+    <th:block th:include="/fragments/navbar"/>
+    <div class="container">
+        <div>
+            <form th:action="@{/messages}" method="post" enctype="multipart/form-data">
+                <label>Message
+                    <input type="text" name="text" placeholder="Input your message here">
+                </label>
+                <label>Tag
+                    <input type="text" name="tag" placeholder="Tag">
+                </label>
+                <input type="file" name="file">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}" />
+                <input type="submit" value="Add">
+            </form>
+        </div>
+        <p>Messages list</p>
+        <div>
+            <form th:action="@{/messages}" method="get" >
+                <label>
+                    <input type="text" name="filter" th:value="${filter}">
+                </label>
+                <input type="submit" value="Find">
+            </form>
+        </div>
+        <div th:each="message: ${messages}">
+            <b th:text="${message.id}"></b>
+            <span th:text="${message.text}"></span>
+            <i th:text="${message.tag}"></i>
+            <strong th:text="${message.authorUsername}"></strong>
+            <div th:if="${message.filename != null && !message.filename.isBlank()}">
+                <img th:src="'img/' + ${message.filename}" alt="file">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

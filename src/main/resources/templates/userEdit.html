@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org">
+<head th:include="/fragments/head.html :: head-fragment">
+    <title id="page-title"
+           th:text="'Edit user ' + ${selectedUser.username}"></title>
+</head>
+<body>
+    <th:block th:include="/fragments/navbar"/>
+    <div class="container">
+        <form th:action="@{/user}" method="post">
+            <div>
+                <label>Username:
+                    <input type="text"
+                           name="username"
+                           th:value="${selectedUser.username}">
+                </label>
+                <div th:each="role: ${roles}">
+                    <label>
+                        <input type="checkbox"
+                               th:name="${role.name()}"
+                               th:checked="${selectedUser.roleSet.contains(role)}">
+                        <span th:text="${role.name()}"></span>
+                    </label>
+                </div>
+                <input type="hidden"
+                       th:value="${selectedUser.id}"
+                       name="userId">
+                <input type="hidden"
+                       th:value="${_csrf.token}"
+                       th:name="${_csrf}">
+                <input type="submit" value="Save!">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
