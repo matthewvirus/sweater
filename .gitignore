@@ -1,3 +1,4 @@
-/.idea/**
-sweater.iml
-/target/**
+/.idea/
+/sweater.iml
+/uploads/**
+/target/
