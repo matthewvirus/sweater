@@ -35,7 +35,7 @@
             <b th:text="${message.id}"></b>
             <span th:text="${message.text}"></span>
             <i th:text="${message.tag}"></i>
-            <strong th:text="${message.authorUsername}"></strong>
+            <b th:text="${message.authorUsername}"></b>
             <div th:if="${message.filename != null && !message.filename.isBlank()}">
                 <img th:src="'img/' + ${message.filename}" alt="file">
             </div>
