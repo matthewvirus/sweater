@@ -1,4 +1,4 @@
-package by.matthewvirus.sweater.domain;
+package by.matthewvirus.sweater.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String username;
@@ -30,7 +30,7 @@ public class User implements UserDetails {
     private Set<Role> roleSet;
 
     public boolean isAdmin() {
-        return roleSet.contains(Role.ADMIN);
+        return roleSet.contains(Role.ROLE_ADMIN);
     }
 
     @Override
