@@ -1,6 +1,6 @@
 package by.matthewvirus.sweater.repository;
 
-import by.matthewvirus.sweater.domain.Message;
+import by.matthewvirus.sweater.entity.Message;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
