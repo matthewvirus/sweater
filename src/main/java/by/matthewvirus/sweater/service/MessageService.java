@@ -44,7 +44,7 @@ public class MessageService {
             String filename = uuidFile + "." + file.getOriginalFilename();
             file.transferTo(new File(uploadPath + "/" + filename));
             message.setFilename(filename);
-            messageRepository.save(message);
         }
+        messageRepository.save(message);
     }
 }
