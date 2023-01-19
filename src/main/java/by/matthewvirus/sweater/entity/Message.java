@@ -1,4 +1,4 @@
-package by.matthewvirus.sweater.domain;
+package by.matthewvirus.sweater.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
