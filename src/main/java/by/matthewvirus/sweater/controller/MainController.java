@@ -1,10 +1,9 @@
 package by.matthewvirus.sweater.controller;
 
-import by.matthewvirus.sweater.domain.Message;
-import by.matthewvirus.sweater.domain.User;
+import by.matthewvirus.sweater.entity.Message;
+import by.matthewvirus.sweater.entity.User;
 import by.matthewvirus.sweater.repository.MessageRepository;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
