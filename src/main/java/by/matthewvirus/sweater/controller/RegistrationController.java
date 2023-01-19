@@ -1,23 +1,22 @@
 package by.matthewvirus.sweater.controller;
 
-import by.matthewvirus.sweater.domain.Role;
-import by.matthewvirus.sweater.domain.User;
+import by.matthewvirus.sweater.entity.Role;
+import by.matthewvirus.sweater.entity.User;
 import by.matthewvirus.sweater.repository.UserRepository;
+import by.matthewvirus.sweater.service.UserService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Collections;
-
 @Controller
 public class RegistrationController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public RegistrationController(UserRepository repository) {
-        this.userRepository = repository;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/registration")
@@ -27,14 +26,10 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(@NotNull User user, Model model) {
-        User userFromDb = userRepository.findByUsername(user.getUsername());
-        if (userFromDb != null) {
+        if (!userService.saveUser(user)) {
             model.addAttribute("message", "User is exists");
             return "registration";
         }
-        user.setActive(true);
-        user.setRoleSet(Collections.singleton(Role.USER));
-        userRepository.save(user);
         return "redirect:/login";
     }
 }
