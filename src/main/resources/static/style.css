@@ -1,3 +1,17 @@
 body {
     color: #113;
 }
+
+.vertical-center {
+    display: flex;
+    align-items: center;
+    min-height: 75vh;
+}
+
+.error {
+    color: red;
+}
+
+.info-success {
+    color: green;
+}
