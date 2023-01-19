@@ -1,10 +1,8 @@
 package by.matthewvirus.sweater.controller;
 
-import by.matthewvirus.sweater.entity.Message;
 import by.matthewvirus.sweater.entity.User;
-import by.matthewvirus.sweater.repository.MessageRepository;
+import by.matthewvirus.sweater.service.MessageService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,21 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.UUID;
 
 @Controller
 public class MainController {
 
-    @Value("${upload.path}")
-    private String uploadPath;
+    private final MessageService messageService;
 
-    private final MessageRepository messageRepository;
-
-    public MainController(MessageRepository repository) {
-        this.messageRepository = repository;
+    public MainController(MessageService messageService) {
+        this.messageService = messageService;
     }
 
     @GetMapping("/")
@@ -44,11 +36,11 @@ public class MainController {
             @RequestParam(required = false) String filter,
             @NotNull Model model
     ) {
-        model.addAttribute("messages", messageRepository.findAll());
+        model.addAttribute("messages", messageService.allMessages());
         if (filter == null || filter.isEmpty()) {
-            model.addAttribute("messages", messageRepository.findAll());
+            model.addAttribute("messages", messageService.allMessages());
         } else {
-            model.addAttribute("messages", messageRepository.findByTag(filter));
+            model.addAttribute("messages", messageService.getMessageByTag(filter));
             model.addAttribute("filter", filter);
         }
         return "messages";
@@ -62,19 +54,8 @@ public class MainController {
             @RequestParam("file") MultipartFile file,
             @NotNull Model model
     ) throws IOException {
-        Message message = new Message(text, tag, user);
-        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String filename = uuidFile + "." + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + "/" + filename));
-            message.setFilename(filename);
-        }
-        messageRepository.save(message);
-        model.addAttribute("messages", messageRepository.findAll());
+        messageService.saveMessage(user, text, tag, file);
+        model.addAttribute("messages", messageService.allMessages());
         return "messages";
     }
 }
