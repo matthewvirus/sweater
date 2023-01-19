@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="https://www.thymeleaf.org">
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:include="/fragments/head.html :: head-fragment">
     <title id="page-title">Home</title>
 </head>
 <body>
-    <th:block th:include="/fragments/navbar"/>
+    <header>
+        <th:block th:include="/fragments/navbar"/>
+    </header>
     <div class="container d-flex align-items-center justify-content-center mt-5">
         <div class="row">
             <div class="col-md-12">
-                <h3>Hello, guest!</h3>
+                <div sec:authorize="isAuthenticated()">
+                    <h3 th:text="'Hello, ' + ${#authentication.name} + '!'"></h3>
+                </div>
+                <div sec:authorize="isAnonymous()">
+                    <h3>Hello, guest!</h3>
+                </div>
                 <p> This is a simple site which created just to learn more about Spring Boot,
                     Spring Security and just understand the working principles.</p>
             </div>
