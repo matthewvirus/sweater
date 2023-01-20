@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,8 +17,11 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private final MailSender mailSender;
+
+    public UserService(UserRepository userRepository, MailSender mailSender) {
         this.userRepository = userRepository;
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -43,8 +47,19 @@ public class UserService implements UserDetailsService {
         if (userFromDb != null) {
             return false;
         }
-        user.setActive(true);
+        user.setActive(false);
         user.setRoleSet(Collections.singleton(Role.ROLE_USER));
+        user.setActivationCode(UUID.randomUUID().toString());
+        user.setEmail(user.getEmail());
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            String message = String.format(
+                    "Hello, %s!\n" +
+                            "Welcome to Sweater. Please, visit link: http://localhost:8080/activate/%s " +
+                            "to confirm your email.",
+                    user.getUsername(), user.getActivationCode()
+            );
+            mailSender.send(user.getEmail(), "Activation code", message);
+        }
         userRepository.save(user);
         return true;
     }
@@ -69,5 +84,16 @@ public class UserService implements UserDetailsService {
             }
         }
         userRepository.save(user);
+    }
+
+    public boolean activateUser(String code) {
+        User user = userRepository.findByActivationCode(code);
+        if (user == null) {
+            return false;
+        }
+        user.setActivationCode(null);
+        user.setActive(true);
+        userRepository.save(user);
+        return true;
     }
 }
