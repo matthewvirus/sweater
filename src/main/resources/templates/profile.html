@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:include="/fragments/head.html :: head-fragment">
+    <title id="page-title">Profile</title>
+</head>
+<body>
+    <header>
+        <th:block th:include="~{/fragments/navbar}"/>
+    </header>
+    <div class="container">
+        <div class="row vertical-center d-flex justify-content-center align-items-center">
+            <div class="col-md-4">
+                <form method="post" class="form-example">
+                    <h1 class="h3 mb-3 fw-normal">Update account info</h1>
+                    <div class="mb-3">
+                        <label for="email">E-mail:</label>
+                        <input type="email"
+                               name="email"
+                               id="email"
+                               class="form-control"
+                               placeholder="index@email.com"
+                               th:value="${email}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password">Password:</label>
+                        <input type="password"
+                               name="password"
+                               id="password"
+                               class="form-control"
+                               placeholder="Some password">
+                    </div>
+                    <input type="hidden"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}"/>
+                    <input type="submit" value="Update account" class="btn btn-outline-primary mb-3 form-control">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
