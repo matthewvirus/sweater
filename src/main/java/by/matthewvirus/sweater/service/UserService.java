@@ -51,6 +51,12 @@ public class UserService implements UserDetailsService {
         user.setRoleSet(Collections.singleton(Role.ROLE_USER));
         user.setActivationCode(UUID.randomUUID().toString());
         user.setEmail(user.getEmail());
+        userRepository.save(user);
+        sendMessage(user);
+        return true;
+    }
+
+    private void sendMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
                     "Hello, %s!\n" +
@@ -60,8 +66,6 @@ public class UserService implements UserDetailsService {
             );
             mailSender.send(user.getEmail(), "Activation code", message);
         }
-        userRepository.save(user);
-        return true;
     }
 
     public boolean deleteUser(Long id) {
@@ -95,5 +99,21 @@ public class UserService implements UserDetailsService {
         user.setActive(true);
         userRepository.save(user);
         return true;
+    }
+
+    public void updateUser(User user, String password, String email) {
+        String userEmail = user.getEmail();
+        boolean isEmailChanged = (email != null && !email.equals(userEmail)) || (userEmail != null && !userEmail.equals(email));
+        if (isEmailChanged) {
+            user.setEmail(email);
+            if (!StringUtils.isEmpty(email)) {
+                user.setActivationCode(UUID.randomUUID().toString());
+            }
+            sendMessage(user);
+        }
+        if (!StringUtils.isEmpty(password)) {
+            user.setPassword(password);
+        }
+        userRepository.save(user);
     }
 }
