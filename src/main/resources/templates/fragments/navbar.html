@@ -23,13 +23,13 @@
                      <a class="nav-link" aria-current="page" href="/messages">Messages</a>
                  </li>
                  <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-                     <a class="nav-link" aria-current="page" th:href="@{/admin}">User list</a>
+                     <a class="nav-link" aria-current="page" th:href="@{/user}">User list</a>
                  </li>
              </ul>
              <div class="my-2 my-lg-0">
                  <div sec:authorize="isAuthenticated()">
                      <form th:action="@{/logout}" method="post">
-                         <label th:text="${#authentication.name}" class="me-3"></label>
+                         <a th:text="${#authentication.name}" class="me-3" th:href="@{/user/profile}"></a>
                          <input type="hidden"
                                 th:name="${_csrf.parameterName}"
                                 th:value="${_csrf.token}" />
