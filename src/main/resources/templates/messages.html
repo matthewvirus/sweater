@@ -12,7 +12,8 @@
         <div class="form-row mb-3 mt-3">
             <div class="col-md-4 form-group">
                 <form th:action="@{/messages}" method="get" class="form-inline d-flex">
-                    <label for="tag"></label><input id="tag" type="text" name="filter" th:value="${filter}" class="form-control me-2" placeholder="Search tag">
+                    <label for="tag"></label>
+                    <input id="tag" type="search" name="filter" th:value="${filter}" class="form-control me-2" placeholder="Search tag">
                     <button type="submit" class="btn btn-primary">Search!</button>
                 </form>
             </div>
@@ -52,8 +53,8 @@
                             <img th:src="'img/' + ${message.filename}" alt="file" class="card-img-top">
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title" th:text="${message.tag}"></h5>
-                            <p class="card-text" th:text="${message.text}"></p>
+                            <span class="card-text" th:text="${message.text}"></span>
+                            <i th:text="${message.tag}"></i>
                         </div>
                         <div class="card-footer text-muted">
                             <i th:text="${message.authorUsername}"></i>
