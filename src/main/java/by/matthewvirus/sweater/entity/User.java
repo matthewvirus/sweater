@@ -31,9 +31,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roleSet;
 
-    public boolean isAdmin() {
-        return roleSet.contains(Role.ROLE_ADMIN);
-    }
+//    public boolean isAdmin() {
+//        return roleSet.contains(Role.ROLE_ADMIN);
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
