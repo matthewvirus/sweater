@@ -13,12 +13,14 @@
             <div class="col-md-4">
                 <form th:action="@{/login}" method="post" class="form-example">
                     <h1 class="h3 mb-3 fw-normal">Log In</h1>
-                    <div th:if="${param.error}" class="error mb-3">
+                    <div th:if="${param.error}" class="info-error mb-3">
                         Invalid username or password!
                     </div>
                     <div th:if="${param.logout}" class="info-success mb-3">
                         You have been logged out.
                     </div>
+                    <div th:text="${messageSuccess}" class="info-success"></div>
+                    <div th:text="${messageError}" class="info-error"></div>
                     <div class="mb-3">
                         <label for="username">User name:</label>
                         <input type="text" name="username" id="username" class="form-control">
