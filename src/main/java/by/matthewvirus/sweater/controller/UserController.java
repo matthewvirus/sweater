@@ -5,6 +5,7 @@ import by.matthewvirus.sweater.entity.User;
 import by.matthewvirus.sweater.service.UserService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -22,12 +22,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping
     public String userList(@NotNull Model model) {
         model.addAttribute("users", userService.allUsers());
         return "userList";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/{user}")
     public String userEdit(
             @PathVariable User user,
@@ -38,6 +40,7 @@ public class UserController {
         return "userEdit";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public String updateUser(
             @RequestParam String username,
@@ -46,5 +49,22 @@ public class UserController {
     ) {
         userService.updateUser(username, form, user);
         return "redirect:/admin";
+    }
+
+    @GetMapping("/profile")
+    public String getProfile(Model model, @AuthenticationPrincipal User user) {
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
+        return "profile";
+    }
+
+    @PostMapping("/profile")
+    public String updateProfile(
+            @AuthenticationPrincipal User user,
+            @RequestParam String password,
+            @RequestParam String email
+    ) {
+        userService.updateUser(user, password, email);
+        return "redirect:/user/profile";
     }
 }
