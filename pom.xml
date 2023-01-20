@@ -26,6 +26,16 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- DB migration support -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
+
         <!-- Templates -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
