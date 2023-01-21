@@ -33,8 +33,7 @@ public class MessageService {
         return messageRepository.findByTag(tag);
     }
 
-    public void saveMessage(User user, String text, String tag, MultipartFile file) throws IOException {
-        Message message = new Message(text, tag, user);
+    public void saveMessage(Message message, MultipartFile file) throws IOException {
         if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {

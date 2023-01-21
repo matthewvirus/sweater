@@ -1,11 +1,15 @@
 package by.matthewvirus.sweater.controller;
 
+import by.matthewvirus.sweater.entity.Message;
 import by.matthewvirus.sweater.entity.User;
 import by.matthewvirus.sweater.service.MessageService;
+import by.matthewvirus.sweater.util.ControllerUtils;
+import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,12 +53,18 @@ public class MainController {
     @PostMapping("/messages")
     public String add(
             @AuthenticationPrincipal User user,
-            @RequestParam String text,
-            @RequestParam String tag,
+            @Valid Message message,
+            BindingResult bindingResult,
             @RequestParam("file") MultipartFile file,
             @NotNull Model model
     ) throws IOException {
-        messageService.saveMessage(user, text, tag, file);
+        message.setAuthor(user);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("map", ControllerUtils.getErrors(bindingResult));
+            model.addAttribute("message", message);
+        } else {
+            messageService.saveMessage(message, file);
+        }
         model.addAttribute("messages", messageService.allMessages());
         return "messages";
     }

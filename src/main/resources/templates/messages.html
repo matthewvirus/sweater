@@ -23,16 +23,31 @@
                 <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                     Add new message
                 </a>
-                <div class="collapse" id="collapseExample">
+                <div th:class="${message != null} ? 'collapse show' : 'collapse'" id="collapseExample">
                     <form th:action="@{/messages}" method="post" enctype="multipart/form-data">
                         <div class="form-group mt-3">
                             <input type="text"
                                    name="text"
                                    placeholder="Input your message here"
-                                   id="message-field" class="form-control">
+                                   id="message-field"
+                                   th:value="${message != null} ? ${message.text} : ''"
+                                   th:class="${map != null && map.containsKey('textError')} ? 'form-control is-invalid' : 'form-control'">
+                            <div class="invalid-feedback"
+                                 th:if="${map != null && map.containsKey('textError')}">
+                                <label th:text="${map.get('textError')}"></label>
+                            </div>
                         </div>
                         <div class="form-group mt-3">
-                            <input type="text" name="tag" placeholder="Tag" id="tag-field" class="form-control">
+                            <input type="text"
+                                   name="tag"
+                                   placeholder="Tag"
+                                   id="tag-field"
+                                   th:value="${message != null} ? ${message.tag} : ''"
+                                   th:class="${map != null && map.containsKey('tagError')} ? 'form-control is-invalid' : 'form-control'">
+                            <div class="invalid-feedback"
+                                 th:if="${map != null && map.containsKey('tagError')}">
+                                <label th:text="${map.get('tagError')}"></label>
+                            </div>
                         </div>
                         <div class="form-group mt-3">
                             <input type="file" name="file" class="form-control">
