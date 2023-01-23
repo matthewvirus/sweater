@@ -60,10 +60,11 @@ public class MainController {
     ) throws IOException {
         message.setAuthor(user);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("map", ControllerUtils.getErrors(bindingResult));
+            model.addAttribute("errorsMap", ControllerUtils.getErrors(bindingResult));
             model.addAttribute("message", message);
         } else {
             messageService.saveMessage(message, file);
+            model.addAttribute("message", null);
         }
         model.addAttribute("messages", messageService.allMessages());
         return "messages";
