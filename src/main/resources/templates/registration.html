@@ -11,20 +11,64 @@
     <div class="container">
         <div class="row vertical-center d-flex justify-content-center align-items-center">
             <div class="col-md-4">
-                <div th:text="${message}"></div>
+                <div th:text="${usernameError}"></div>
                 <form th:action="@{/registration}" method="post">
                     <h1 class="h3 mb-3 fw-normal">Registration</h1>
                     <div class="mb-3">
-                        <label for="username">User name</label>
-                        <input type="text" name="username" id="username" class="form-control" placeholder="Username">
+                        <label for="email">E-mail:</label>
+                        <input type="email"
+                               name="email"
+                               id="email"
+                               class="form-control"
+                               placeholder="index@email.com"
+                               th:value="${user != null} ? ${user.email} : ''"
+                               th:class="${errorsMap != null && errorsMap.containsKey('emailError')} ? 'form-control is-invalid' : 'form-control'">
+                        <div class="invalid-feedback">
+                            <label th:if="${errorsMap != null && errorsMap.containsKey('emailError')}"
+                                   th:text="${errorsMap.get('emailError')}"></label>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label for="email">E-mail:</label>
-                        <input type="email" name="email" id="email" class="form-control" placeholder="index@email.com">
+                        <label for="username">User name</label>
+                        <input type="text"
+                               name="username"
+                               id="username"
+                               class="form-control"
+                               placeholder="Username"
+                               th:value="${user != null} ? ${user.username} : ''"
+                               th:class="${errorsMap != null && errorsMap.containsKey('usernameError')} ? 'form-control is-invalid' : 'form-control'">
+                        <div class="invalid-feedback">
+                            <label th:if="${errorsMap != null && errorsMap.containsKey('usernameError')}"
+                                   th:text="${errorsMap.get('usernameError')}"></label>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="password">Password:</label>
-                        <input type="password" name="password" id="password" class="form-control" placeholder="Some password">
+                        <input type="password"
+                               name="password"
+                               id="password"
+                               class="form-control"
+                               placeholder="Some password"
+                               th:class="${(errorsMap != null && errorsMap.containsKey('passwordError')) || (passwordsError != null && !passwordsError.isEmpty())} ? 'form-control is-invalid' : 'form-control'">
+                        <div class="invalid-feedback">
+                            <label th:if="${errorsMap != null && errorsMap.containsKey('passwordError')}"
+                                   th:text="${errorsMap.get('passwordError')}"></label>
+                            <label th:if="${passwordsError != null}"
+                                   th:text="${passwordsError}"></label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordConf">Password confirmation:</label>
+                        <input type="password"
+                               name="passwordConf"
+                               id="passwordConf"
+                               class="form-control"
+                               placeholder="Password confirmation"
+                               th:class="${passwordConfError != null} ? 'form-control is-invalid' : 'form-control'">
+                        <div class="invalid-feedback">
+                            <label th:if="${passwordConfError != null}"
+                                   th:text="${passwordConfError}"></label>
+                        </div>
                     </div>
                     <input type="submit" value="Register" class="btn btn-outline-primary mb-3 form-control">
                 </form>

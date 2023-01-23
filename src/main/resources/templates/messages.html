@@ -31,10 +31,10 @@
                                    placeholder="Input your message here"
                                    id="message-field"
                                    th:value="${message != null} ? ${message.text} : ''"
-                                   th:class="${map != null && map.containsKey('textError')} ? 'form-control is-invalid' : 'form-control'">
-                            <div class="invalid-feedback"
-                                 th:if="${map != null && map.containsKey('textError')}">
-                                <label th:text="${map.get('textError')}"></label>
+                                   th:class="${errorsMap != null && errorsMap.containsKey('textError')} ? 'form-control is-invalid' : 'form-control'">
+                            <div class="invalid-feedback">
+                                <label th:if="${errorsMap != null && errorsMap.containsKey('textError')}"
+                                       th:text="${errorsMap.get('textError')}"></label>
                             </div>
                         </div>
                         <div class="form-group mt-3">
@@ -43,10 +43,10 @@
                                    placeholder="Tag"
                                    id="tag-field"
                                    th:value="${message != null} ? ${message.tag} : ''"
-                                   th:class="${map != null && map.containsKey('tagError')} ? 'form-control is-invalid' : 'form-control'">
-                            <div class="invalid-feedback"
-                                 th:if="${map != null && map.containsKey('tagError')}">
-                                <label th:text="${map.get('tagError')}"></label>
+                                   th:class="${errorsMap != null && errorsMap.containsKey('tagError')} ? 'form-control is-invalid' : 'form-control'">
+                            <div class="invalid-feedback">
+                                <label th:if="${errorsMap != null && errorsMap.containsKey('tagError')}"
+                                       th:text="${errorsMap.get('tagError')}"></label>
                             </div>
                         </div>
                         <div class="form-group mt-3">
