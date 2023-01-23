@@ -70,6 +70,13 @@
                                    th:text="${passwordConfError}"></label>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <div class="g-recaptcha"
+                             data-sitekey="6Lcj0R4kAAAAAM-m4Py9k0B54ExbfwwDs89GUF0Y"></div>
+                        <div th:if="${captchaError != null}"
+                             th:text="${captchaError}"
+                             class="info-error alert alert-danger"></div>
+                    </div>
                     <input type="submit" value="Register" class="btn btn-outline-primary mb-3 form-control">
                 </form>
                 <p>Already have an account? <a th:href="@{/login}">Log In!</a></p>
