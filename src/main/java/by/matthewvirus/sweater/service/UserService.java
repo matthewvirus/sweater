@@ -3,10 +3,13 @@ package by.matthewvirus.sweater.service;
 import by.matthewvirus.sweater.entity.Role;
 import by.matthewvirus.sweater.entity.User;
 import by.matthewvirus.sweater.repository.UserRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.*;
@@ -19,9 +22,16 @@ public class UserService implements UserDetailsService {
 
     private final MailSender mailSender;
 
-    public UserService(UserRepository userRepository, MailSender mailSender) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(
+            UserRepository userRepository,
+            MailSender mailSender,
+            @Lazy PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -44,13 +54,15 @@ public class UserService implements UserDetailsService {
 
     public boolean saveUser(User user) {
         User userFromDb = userRepository.findByUsername(user.getUsername());
-        if (userFromDb != null) {
+        if ((userFromDb != null) ||
+                (user.getPassword() != null && !user.getPassword().equals(user.getPasswordConf()))) {
             return false;
         }
         user.setActive(false);
         user.setRoleSet(Collections.singleton(Role.ROLE_USER));
         user.setActivationCode(UUID.randomUUID().toString());
         user.setEmail(user.getEmail());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         sendMessage(user);
         return true;
@@ -101,6 +113,7 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
+    @Transactional
     public void updateUser(User user, String password, String email) {
         String userEmail = user.getEmail();
         boolean isEmailChanged = (email != null && !email.equals(userEmail)) || (userEmail != null && !userEmail.equals(email));
@@ -112,7 +125,7 @@ public class UserService implements UserDetailsService {
             sendMessage(user);
         }
         if (!StringUtils.isEmpty(password)) {
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
         }
         userRepository.save(user);
     }
