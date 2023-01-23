@@ -48,7 +48,7 @@ public class UserController {
             @RequestParam("userId") User user
     ) {
         userService.updateUser(username, form, user);
-        return "redirect:/admin";
+        return "redirect:/user";
     }
 
     @GetMapping("/profile")

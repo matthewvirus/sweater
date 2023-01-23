@@ -19,7 +19,7 @@
                 <tr th:each="user: ${users}">
                     <td th:text="${user.username}"></td>
                     <td th:text="${user.roleSet}"></td>
-                    <td><a th:href="@{/admin/{id}(id=${user.id})}">Edit user</a></td>
+                    <td><a th:href="@{/user/{id}(id=${user.id})}">Edit user</a></td>
                 </tr>
             </tbody>
         </table>
