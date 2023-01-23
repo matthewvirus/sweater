@@ -1,6 +1,6 @@
 package by.matthewvirus.sweater.repository;
 
-import by.matthewvirus.sweater.entity.Message;
+import by.matthewvirus.sweater.domain.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

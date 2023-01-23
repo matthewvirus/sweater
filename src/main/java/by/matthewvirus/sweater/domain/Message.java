@@ -1,4 +1,4 @@
-package by.matthewvirus.sweater.entity;
+package by.matthewvirus.sweater.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

@@ -1,7 +1,7 @@
 package by.matthewvirus.sweater.controller;
 
-import by.matthewvirus.sweater.entity.Role;
-import by.matthewvirus.sweater.entity.User;
+import by.matthewvirus.sweater.domain.Role;
+import by.matthewvirus.sweater.domain.User;
 import by.matthewvirus.sweater.service.UserService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.access.prepost.PreAuthorize;

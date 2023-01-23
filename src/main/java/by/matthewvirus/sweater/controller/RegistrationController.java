@@ -1,6 +1,6 @@
 package by.matthewvirus.sweater.controller;
 
-import by.matthewvirus.sweater.entity.User;
+import by.matthewvirus.sweater.domain.User;
 import by.matthewvirus.sweater.service.UserService;
 import by.matthewvirus.sweater.util.ControllerUtils;
 import jakarta.validation.Valid;

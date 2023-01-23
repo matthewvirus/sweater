@@ -1,7 +1,6 @@
 package by.matthewvirus.sweater.service;
 
-import by.matthewvirus.sweater.entity.Message;
-import by.matthewvirus.sweater.entity.User;
+import by.matthewvirus.sweater.domain.Message;
 import by.matthewvirus.sweater.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

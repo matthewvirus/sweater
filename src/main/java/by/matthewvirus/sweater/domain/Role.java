@@ -1,4 +1,4 @@
-package by.matthewvirus.sweater.entity;
+package by.matthewvirus.sweater.domain;
 
 import org.springframework.security.core.GrantedAuthority;
 

@@ -1,7 +1,7 @@
 package by.matthewvirus.sweater.service;
 
-import by.matthewvirus.sweater.entity.Role;
-import by.matthewvirus.sweater.entity.User;
+import by.matthewvirus.sweater.domain.Role;
+import by.matthewvirus.sweater.domain.User;
 import by.matthewvirus.sweater.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
