@@ -24,7 +24,11 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping
-    public String userList(@NotNull Model model) {
+    public String userList(
+            @AuthenticationPrincipal User user,
+            @NotNull Model model
+    ) {
+        model.addAttribute("currentUserId", user.getId());
         model.addAttribute("users", userService.allUsers());
         return "userList";
     }
@@ -32,9 +36,11 @@ public class UserController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/{user}")
     public String userEdit(
+            @AuthenticationPrincipal User currentUser,
             @PathVariable User user,
             Model model
     ) {
+        model.addAttribute("currentUserId", currentUser.getId());
         model.addAttribute("selectedUser", user);
         model.addAttribute("roles", Role.values());
         return "userEdit";
@@ -55,6 +61,7 @@ public class UserController {
     public String getProfile(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
+        model.addAttribute("currentUserId", user.getId());
         return "profile";
     }
 
