@@ -45,4 +45,8 @@ public class MessageService {
         }
         messageRepository.save(message);
     }
+
+    public void saveMessage(Message message) {
+        messageRepository.save(message);
+    }
 }
