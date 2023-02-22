@@ -28,15 +28,20 @@ public class MainController {
 
     @GetMapping("/")
     public String greeting(
+            @AuthenticationPrincipal User user,
             @RequestParam(name = "name", required = false, defaultValue = "World") String name,
             @NotNull Model model
     ) {
         model.addAttribute("name", name);
+        if (user != null) {
+            model.addAttribute("currentUserId", user.getId());
+        }
         return "home";
     }
 
     @GetMapping( "/messages")
     public String messages(
+            @AuthenticationPrincipal User user,
             @RequestParam(required = false) String filter,
             @NotNull Model model
     ) {
@@ -47,14 +52,15 @@ public class MainController {
             model.addAttribute("messages", messageService.getMessageByTag(filter));
             model.addAttribute("filter", filter);
         }
+        model.addAttribute("currentUserId", user.getId());
         return "messages";
     }
 
     @PostMapping("/messages")
     public String add(
             @AuthenticationPrincipal User user,
-            @Valid Message message,
-            BindingResult bindingResult,
+            @Valid @NotNull Message message,
+            @NotNull BindingResult bindingResult,
             @RequestParam("file") MultipartFile file,
             @NotNull Model model
     ) throws IOException {
