@@ -48,7 +48,7 @@ public class RegistrationController {
     {
         String url = String.format(CAPTCHA_URL, secretKey, captchaResponse);
         CaptchaResponseDto captchaResponseDto = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDto.class);
-        if (!captchaResponseDto.isSuccess()) {
+        if (captchaResponseDto != null && !captchaResponseDto.isSuccess()) {
             model.addAttribute("captchaError", "Please, fill the captcha!");
         }
         if (user.getPasswordConf() == null || user.getPasswordConf().isEmpty()) {
@@ -58,7 +58,7 @@ public class RegistrationController {
             model.addAttribute("passwordsError", "Passwords are not equals!");
             System.out.println(user.getPasswordConf() + user.getPassword());
         }
-        if (bindingResult.hasErrors() || !captchaResponseDto.isSuccess()) {
+        if (captchaResponseDto != null && (bindingResult.hasErrors() || !captchaResponseDto.isSuccess())) {
             model.addAttribute("errorsMap", ControllerUtils.getErrors(bindingResult));
             return "registration";
         }
