@@ -2,80 +2,77 @@ package by.matthewvirus.sweater.controller;
 
 import by.matthewvirus.sweater.domain.Message;
 import by.matthewvirus.sweater.domain.User;
-import by.matthewvirus.sweater.repository.MessageRepository;
+import by.matthewvirus.sweater.service.MessageService;
+import by.matthewvirus.sweater.util.ControllerUtils;
+import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.UUID;
 
 @Controller
 public class MainController {
 
-    @Value("${upload.path}")
-    private String uploadPath;
+    private final MessageService messageService;
 
-    private final MessageRepository messageRepository;
-
-    public MainController(MessageRepository repository) {
-        this.messageRepository = repository;
+    public MainController(MessageService messageService) {
+        this.messageService = messageService;
     }
 
     @GetMapping("/")
     public String greeting(
+            @AuthenticationPrincipal User user,
             @RequestParam(name = "name", required = false, defaultValue = "World") String name,
             @NotNull Model model
     ) {
         model.addAttribute("name", name);
+        if (user != null) {
+            model.addAttribute("currentUserId", user.getId());
+        }
         return "home";
     }
 
     @GetMapping( "/messages")
     public String messages(
+            @AuthenticationPrincipal User user,
             @RequestParam(required = false) String filter,
             @NotNull Model model
     ) {
-        model.addAttribute("messages", messageRepository.findAll());
+        model.addAttribute("messages", messageService.allMessages());
         if (filter == null || filter.isEmpty()) {
-            model.addAttribute("messages", messageRepository.findAll());
+            model.addAttribute("messages", messageService.allMessages());
         } else {
-            model.addAttribute("messages", messageRepository.findByTag(filter));
+            model.addAttribute("messages", messageService.getMessageByTag(filter));
             model.addAttribute("filter", filter);
         }
+        model.addAttribute("currentUserId", user.getId());
         return "messages";
     }
 
     @PostMapping("/messages")
     public String add(
             @AuthenticationPrincipal User user,
-            @RequestParam String text,
-            @RequestParam String tag,
+            @Valid @NotNull Message message,
+            @NotNull BindingResult bindingResult,
             @RequestParam("file") MultipartFile file,
             @NotNull Model model
     ) throws IOException {
-        Message message = new Message(text, tag, user);
-        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String filename = uuidFile + "." + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + "/" + filename));
-            message.setFilename(filename);
+        message.setAuthor(user);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errorsMap", ControllerUtils.getErrors(bindingResult));
+            model.addAttribute("message", message);
+        } else {
+            messageService.saveMessage(message, file);
+            model.addAttribute("message", null);
         }
-        messageRepository.save(message);
-        model.addAttribute("messages", messageRepository.findAll());
+        model.addAttribute("messages", messageService.allMessages());
         return "messages";
     }
 }
