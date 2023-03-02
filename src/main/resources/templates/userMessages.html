@@ -74,7 +74,7 @@
     <div class="form-row mb-3 mt-3">
         <div class="col-md-4 form-group">
             <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Edit message</a>
-            <div th:class="${messages != null} ? 'collapse show' : 'collapse'" id="collapseExample">
+            <div th:class="${message.id != null} ? 'collapse show' : 'collapse'" id="collapseExample">
                 <form th:action="@{/user-messages/{id}(id=${currentUserId})}" method="post" enctype="multipart/form-data">
                     <div class="form-group mt-3">
                         <input type="text"
@@ -82,11 +82,7 @@
                                placeholder="Input your message here"
                                id="message-field"
                                th:value="${message != null} ? ${message.text} : ''"
-                               th:class="${errorsMap != null && errorsMap.containsKey('textError')} ? 'form-control is-invalid' : 'form-control'">
-                        <div class="invalid-feedback">
-                            <label th:if="${errorsMap != null && errorsMap.containsKey('textError')}"
-                                   th:text="${errorsMap.get('textError')}"></label>
-                        </div>
+                               class='form-control'>
                     </div>
                     <div class="form-group mt-3">
                         <input type="text"
@@ -94,11 +90,7 @@
                                placeholder="Tag"
                                id="tag-field"
                                th:value="${message != null} ? ${message.tag} : ''"
-                               th:class="${errorsMap != null && errorsMap.containsKey('tagError')} ? 'form-control is-invalid' : 'form-control'">
-                        <div class="invalid-feedback">
-                            <label th:if="${errorsMap != null && errorsMap.containsKey('tagError')}"
-                                   th:text="${errorsMap.get('tagError')}"></label>
-                        </div>
+                               class='form-control'>
                     </div>
                     <div class="form-group mt-3">
                         <input type="file" name="file" class="form-control">

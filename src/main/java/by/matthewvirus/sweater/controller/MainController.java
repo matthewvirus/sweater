@@ -67,10 +67,10 @@ public class MainController {
         message.setAuthor(user);
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorsMap", ControllerUtils.getErrors(bindingResult));
-            model.addAttribute("message", message);
+            model.addAttribute("messageToAdd", message);
         } else {
             messageService.saveMessage(message, file);
-            model.addAttribute("message", null);
+            model.addAttribute("messageToAdd", null);
         }
         model.addAttribute("messages", messageService.allMessages());
         return "messages";
