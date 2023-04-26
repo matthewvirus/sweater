@@ -38,6 +38,10 @@ public class UserMessageController {
         model.addAttribute("messages", messages);
         model.addAttribute("isCurrentUser", currentUser.equals(user));
         model.addAttribute("currentUserId", currentUser.getId());
+        model.addAttribute("userChannel", user);
+        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
+        model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
+        model.addAttribute("subscribersCount", user.getSubscribers().size());
         return "userMessages";
     }
 
