@@ -3,6 +3,7 @@ package by.matthewvirus.sweater.service;
 import by.matthewvirus.sweater.domain.Role;
 import by.matthewvirus.sweater.domain.User;
 import by.matthewvirus.sweater.repository.UserRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -131,6 +132,16 @@ public class UserService implements UserDetailsService {
         if (!StringUtils.isEmpty(password)) {
             user.setPassword(passwordEncoder.encode(password));
         }
+        userRepository.save(user);
+    }
+
+    public void subscribe(User currentUser, @NotNull User user) {
+        user.getSubscribers().add(currentUser);
+        userRepository.save(user);
+    }
+
+    public void unsubscribe(User currentUser, @NotNull User user) {
+        user.getSubscribers().remove(currentUser);
         userRepository.save(user);
     }
 }

@@ -17,7 +17,12 @@
             integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
             crossorigin="anonymous"
             defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+            integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D"
+            crossorigin="anonymous"
+            async></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="/masonryOverlappingFix.js"></script>
 </head>
 <body>
 <header>
@@ -71,10 +76,41 @@
     </nav>
 </header>
 <div class="container">
-    <div class="form-row mb-3 mt-3">
+    <div class="row mb-3">
+        <div class="col">
+            <h3 th:text="${userChannel.username}"></h3>
+            <a th:href="@{/user/subscribe/{userChannelId}(userChannelId=${userChannel.id})}"
+               th:if="${!isCurrentUser && !isSubscriber}" class="btn btn-outline-primary">Subscribe</a>
+            <a th:href="@{/user/unsubscribe/{userChannelId}(userChannelId=${userChannel.id})}"
+               th:if="${!isCurrentUser && isSubscriber}" class="btn btn-outline-primary">Unsubscribe</a>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Subscriptions</div>
+                    <h3 class="card-text">
+                        <a th:href="@{/user/subscriptions/{userChannelId}(userChannelId=${userChannel.id})}" th:text="${subscriptionsCount}"></a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Subscribers</div>
+                    <h3 class="card-text">
+                        <a th:href="@{/user/subscribers/{userChannelId}(userChannelId=${userChannel.id})}" th:text="${subscribersCount}"></a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:if="${isCurrentUser}" class="form-row mb-3 mt-3">
         <div class="col-md-4 form-group">
             <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Edit message</a>
-            <div th:class="${messages != null} ? 'collapse show' : 'collapse'" id="collapseExample">
+            <div th:class="${message.id != null} ? 'collapse show' : 'collapse'" id="collapseExample">
                 <form th:action="@{/user-messages/{id}(id=${currentUserId})}" method="post" enctype="multipart/form-data">
                     <div class="form-group mt-3">
                         <input type="text"
@@ -82,11 +118,7 @@
                                placeholder="Input your message here"
                                id="message-field"
                                th:value="${message != null} ? ${message.text} : ''"
-                               th:class="${errorsMap != null && errorsMap.containsKey('textError')} ? 'form-control is-invalid' : 'form-control'">
-                        <div class="invalid-feedback">
-                            <label th:if="${errorsMap != null && errorsMap.containsKey('textError')}"
-                                   th:text="${errorsMap.get('textError')}"></label>
-                        </div>
+                               class='form-control'>
                     </div>
                     <div class="form-group mt-3">
                         <input type="text"
@@ -94,11 +126,7 @@
                                placeholder="Tag"
                                id="tag-field"
                                th:value="${message != null} ? ${message.tag} : ''"
-                               th:class="${errorsMap != null && errorsMap.containsKey('tagError')} ? 'form-control is-invalid' : 'form-control'">
-                        <div class="invalid-feedback">
-                            <label th:if="${errorsMap != null && errorsMap.containsKey('tagError')}"
-                                   th:text="${errorsMap.get('tagError')}"></label>
-                        </div>
+                               class='form-control'>
                     </div>
                     <div class="form-group mt-3">
                         <input type="file" name="file" class="form-control">
@@ -114,10 +142,10 @@
             </div>
         </div>
     </div>
-    <div class="row row-cols-1 row-cols-md-2 g-4">
+    <div id="masonry" class="row row-cols-1 row-cols-md-2 g-4" data-masonry='{"percentPosition": true }'>
         <div th:each="message: ${messages}">
-            <div class="card">
-                <div class="col">
+            <div class="col">
+                <div class="card">
                     <div th:if="${message.filename != null && !message.filename.isBlank()}">
                         <img th:src="'/img/' + ${message.filename}" alt="file" class="card-img-top">
                     </div>
